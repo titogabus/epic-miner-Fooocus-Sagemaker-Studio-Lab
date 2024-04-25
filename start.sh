@@ -1,7 +1,7 @@
 #!/bin/bash
 if [ ! -d "Fooocus" ]
 then
-  git clone https://github.com/titogabus/Fooocus.git
+  git clone https://github.com/mashb1t/Fooocus.git
   #git clone --depth 1 --branch V2 https://github.com/titogabus/Fooocus.git
   # Create the config file pointing the checkpoints to checkpoints-real-folder
 fi
