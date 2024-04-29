@@ -1,22 +1,22 @@
 #!/bin/bash
 
-if [ ! -d "Fooocus" ]; then
-  git clone https://github.com/titogabus/Fooocus.git
+if [ ! -d "DeFooocus" ]; then
+  git clone https://github.com/ehristoforu/DeFooocus.git
 fi
 
-cd Fooocus
+cd DeFooocus
 git pull
 
-if [ ! -L ~/.conda/envs/fooocus ]; then
-    ln -s /tmp/fooocus ~/.conda/envs/
+if [ ! -L ~/.conda/envs/defooocus ]; then
+    ln -s /tmp/defooocus ~/.conda/envs/
 fi
 
 eval "$(conda shell.bash hook)"
 
-if [ ! -d /tmp/fooocus ]; then
-    mkdir /tmp/fooocus
+if [ ! -d /tmp/defooocus ]; then
+    mkdir /tmp/defooocus
     conda env create -f environment.yaml
-    conda activate fooocus
+    conda activate defooocus
     pip install -r requirements_versions.txt
     pip install torch torchvision --force-reinstall --index-url https://download.pytorch.org/whl/cu117
     conda install glib -y
@@ -42,11 +42,11 @@ if [ ! -L models/checkpoints ]; then
 fi
 
 # Activate the fooocus environment
-conda activate fooocus
+conda activate defooocus
 cd ..
 
 # Run Python script in the background
-python Fooocus/entry_with_update.py --always-high-vram &
+python DeFooocus/entry_with_update.py --always-high-vram &
 
 sleep 120
 
