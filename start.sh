@@ -1,22 +1,22 @@
 #!/bin/bash
-if [ ! -d "Fooocus" ]
+if [ ! -d "DeFooocus" ]
 then
-  git clone https://github.com/titogabus/Fooocus.git
+  git clone https://github.com/ehristoforu/DeFooocus.git
   #git clone --depth 1 --branch V2 https://github.com/titogabus/Fooocus.git
   # Create the config file pointing the checkpoints to checkpoints-real-folder
 fi
-cd Fooocus
+cd DeFooocus
 git pull
-if [ ! -L ~/.conda/envs/fooocus ]
+if [ ! -L ~/.conda/envs/defooocus ]
 then
-    ln -s /tmp/fooocus ~/.conda/envs/
+    ln -s /tmp/defooocus ~/.conda/envs/
 fi
 eval "$(conda shell.bash hook)"
-if [ ! -d /tmp/fooocus ]
+if [ ! -d /tmp/defooocus ]
 then
-    mkdir /tmp/fooocus
+    mkdir /tmp/defooocus
     conda env create -f environment.yaml
-    conda activate fooocus
+    conda activate defooocus
     pwd
     ls
     pip install -r requirements_versions.txt
@@ -47,7 +47,7 @@ then
     ln -s models/checkpoints-real-folder models/checkpoints
 fi
 
-conda activate fooocus
+conda activate defooocus
 cd ..
 if [ $# -eq 0 ]
 then
