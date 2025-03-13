@@ -1,58 +1,48 @@
 #!/bin/bash
-if [ ! -d "ROOP-FLOYD" ]
-then
-  git clone https://codeberg.org/titogabus/ROOP-FLOYD.git
-  #git clone --depth 1 --branch V2 https://codeberg.org/titogabus/ROOP-FLOYD.git
-  # Create the config file pointing the checkpoints to checkpoints-real-folder
-fi
-cd ROOP-FLOYD
-git pull
-if [ ! -L ~/.conda/envs/ROOP-FLOYD ]
-then
-    ln -s /tmp/ROOP-FLOYD ~/.conda/envs/
-fi
-eval "$(conda shell.bash hook)"
-if [ ! -d /tmp/ROOP-FLOYD ]
-then
-    mkdir /tmp/ROOP-FLOYD
-    conda env create -f environment.yaml
-    conda activate ROOP-FLOYD
-    pwd
-    ls
-    pip install -r requirements_versions.txt
-    pip install torch torchvision --force-reinstall --index-url https://download.pytorch.org/whl/cu117
-    pip install pyngrok
-    conda install glib -y
-    rm -rf ~/.cache/pip
+
+# Check if we are in the correct repository directory
+if [ ! -f "run.py" ]; then
+    echo "run.py not found!"
+    exit 1
 fi
 
-# Because the file manager in Sagemaker Studio Lab ignores the folder called "checkpoints"
-# we need to move checkpoint files into a folder with a different name
-current_folder=$(pwd)
-model_folder=${current_folder}/models/checkpoints-real-folder
-if [ ! -e config.txt ]
-then
-  json_data="{ \"path_checkpoints\": \"$model_folder\" }"
-  echo "$json_data" > config.txt
-  echo "JSON file created: config.txt"
+# Create a hidden Python 3.11 virtual environment in the .venv folder
+VENV_DIR=".venv"
+
+# Check if Python 3.11 is installed
+if ! brew list --versions python@3.11 >/dev/null; then
+    echo "Python 3.11 is not installed. Please install it first."
+    exit 1
+fi
+
+# Use Python 3.11 to create the virtual environment
+echo "Creating a virtual environment using Python 3.11..."
+python3.11 -m venv $VENV_DIR
+
+# Activate the virtual environment
+echo "Activating the virtual environment..."
+source "$VENV_DIR/bin/activate"
+
+# Check if the activation was successful
+if [ "$VIRTUAL_ENV" != "" ]; then
+    echo "Virtual environment activated successfully."
 else
-  echo "Updating config.txt to use checkpoints-real-folder"
-  jq --arg new_value "$model_folder" '.path_checkpoints = $new_value' config.txt > config_tmp.txt && mv config_tmp.txt config.txt
+    echo "Failed to activate the virtual environment."
+    exit 1
 fi
 
-# If the checkpoints folder exists, move it to the new checkpoints-real-folder
-if [ ! -L models/checkpoints ]
-then
-    mv models/checkpoints models/checkpoints-real-folder
-    ln -s models/checkpoints-real-folder models/checkpoints
+# Install dependencies from requirements.txt
+if [ -f "requirements.txt" ]; then
+    echo "Installing dependencies from requirements.txt..."
+    pip install -r requirements.txt
+else
+    echo "requirements.txt not found. Skipping dependency installation."
 fi
 
-conda activate ROOP-FLOYD
-cd ..
-if [ $# -eq 0 ]
-then
-  python start-ngrok.py 
-elif [ $1 = "reset" ]
-then
-  python start-ngrok.py --reset 
-fi
+# Run roop-unleashed. This can take a while - especially at first startup...
+echo "Running the run.py script..."
+python run.py
+
+# Deactivate the virtual environment after execution
+echo "Deactivating the virtual environment..."
+deactivate
