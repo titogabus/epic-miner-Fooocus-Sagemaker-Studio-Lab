@@ -1,22 +1,22 @@
 #!/bin/bash
-if [ ! -d "DeFooocus" ]
+if [ ! -d "ROOP-FLOYD" ]
 then
-  git clone https://github.com/ehristoforu/DeFooocus.git
-  #git clone --depth 1 --branch V2 https://github.com/titogabus/Fooocus.git
+  git clone https://codeberg.org/titogabus/ROOP-FLOYD.git
+  #git clone --depth 1 --branch V2 https://codeberg.org/titogabus/ROOP-FLOYD.git
   # Create the config file pointing the checkpoints to checkpoints-real-folder
 fi
-cd DeFooocus
+cd ROOP-FLOYD
 git pull
-if [ ! -L ~/.conda/envs/defooocus ]
+if [ ! -L ~/.conda/envs/ROOP-FLOYD ]
 then
-    ln -s /tmp/defooocus ~/.conda/envs/
+    ln -s /tmp/ROOP-FLOYD ~/.conda/envs/
 fi
 eval "$(conda shell.bash hook)"
-if [ ! -d /tmp/defooocus ]
+if [ ! -d /tmp/ROOP-FLOYD ]
 then
-    mkdir /tmp/defooocus
+    mkdir /tmp/ROOP-FLOYD
     conda env create -f environment.yaml
-    conda activate defooocus
+    conda activate ROOP-FLOYD
     pwd
     ls
     pip install -r requirements_versions.txt
@@ -47,7 +47,7 @@ then
     ln -s models/checkpoints-real-folder models/checkpoints
 fi
 
-conda activate defooocus
+conda activate ROOP-FLOYD
 cd ..
 if [ $# -eq 0 ]
 then
