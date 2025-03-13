@@ -1,5 +1,18 @@
 #!/bin/bash
 
+if [ ! -d "ROOP-FLOYD" ]
+then
+  git clone https://codeberg.org/titogabus/ROOP-FLOYD.git
+  #git clone --depth 1 --branch V2 https://codeberg.org/titogabus/ROOP-FLOYD.git
+  # Create the config file pointing the checkpoints to checkpoints-real-folder
+fi
+cd ROOP-FLOYD
+git pull
+if [ ! -L ~/.conda/envs/ROOP-FLOYD ]
+then
+    ln -s /tmp/ROOP-FLOYD ~/.conda/envs/
+fi
+
 # Check if we are in the correct repository directory
 if [ ! -f "run.py" ]; then
     echo "run.py not found!"
